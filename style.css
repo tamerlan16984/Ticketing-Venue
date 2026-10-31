@@ -66,21 +66,21 @@ main {
 }
 
 #vip {
-    background-color: #4B1F5E;
+    background-color: #F2EAF5;
     border: 2px solid #4B1F5E;
-    color: white;
+    color: #222;
 }
 
 #premium {
-    background-color: #8C1D40;
+    background-color: #F8E9EE;
     border: 2px solid #8C1D40;
-    color: white;
+    color: #222;
 }
 
 #general {
-    background-color: #7A746E;
+    background-color: #EFEEEC;
     border: 2px solid #7A746E;
-    color: white;
+    color: #222;
 }
 
 #vip h3,
@@ -115,4 +115,43 @@ footer {
     #chess-stage {
         padding: 15px;
     }
+}
+.seat-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.seat {
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 6px;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+#vip .seat {
+    background-color: #4B1F5E;
+}
+
+#premium .seat {
+    background-color: #8C1D40;
+}
+
+#general .seat {
+    background-color: #7A746E;
+}
+
+.seat:hover {
+    outline: 2px solid #C9A227;
+    outline-offset: 2px;
+}
+
+#vip,
+#premium,
+#general {
+    overflow-x: auto;
 }
