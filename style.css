@@ -155,3 +155,29 @@ footer {
 #general {
     overflow-x: auto;
 }
+
+#seat-details {
+    background-color: #f8f8f8;
+    border: 2px solid #c9a227;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 25px;
+}
+
+#seat-details h3 {
+    margin-top: 0;
+}
+
+#selected-seat-info p {
+    margin: 10px 0;
+}
+
+.seat.selected {
+    outline: 3px solid #c9a227;
+    outline-offset: 2px;
+}
+
+.seat:focus-visible {
+    outline: 3px dashed #17202a;
+    outline-offset: 2px;
+}

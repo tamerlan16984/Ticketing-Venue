@@ -44,6 +44,18 @@
                 <p>Ticket price: 40 AZN</p>
                 <div id="general-seats"></div>
             </section>
+            <section id="seat-details" aria-labelledby="seat-details-heading">
+                <h3 id="seat-details-heading">Selected Seat Details</h3>
+                <div aria-live="polite">
+                    <p id="seat-message">Click a seat to view its details.</p>
+                    <div id="selected-seat-info" hidden>
+                        <p>Section: <span id="selected-section"></span></p>
+                        <p>Row: <span id="selected-row"></span></p>
+                        <p>Seat: <span id="selected-number"></span></p>
+                        <p>Price: <span id="selected-price"></span> AZN</p>
+                    </div>
+                </div>
+            </section>
         </section>
     </main>
 

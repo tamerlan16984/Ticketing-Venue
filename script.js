@@ -46,3 +46,32 @@ sections.forEach(function(section) {
         container.appendChild(rowElement);
     }
 });
+
+let selectedSeat = null;
+
+document.querySelectorAll(".seat").forEach(function(seatButton) {
+    seatButton.setAttribute("aria-pressed", "false");
+    seatButton.setAttribute(
+        "aria-label",
+        `${seatButton.dataset.section}, row ${seatButton.dataset.row}, seat ${seatButton.dataset.seat}, ${seatButton.dataset.price} AZN`
+    );
+
+    seatButton.addEventListener("click", function() {
+        if (selectedSeat !== null) {
+            selectedSeat.classList.remove("selected");
+            selectedSeat.setAttribute("aria-pressed", "false");
+        }
+
+        selectedSeat = seatButton;
+        selectedSeat.classList.add("selected");
+        selectedSeat.setAttribute("aria-pressed", "true");
+
+        document.getElementById("seat-message").hidden = true;
+        document.getElementById("selected-seat-info").hidden = false;
+
+        document.getElementById("selected-section").textContent = seatButton.dataset.section;
+        document.getElementById("selected-row").textContent = seatButton.dataset.row;
+        document.getElementById("selected-number").textContent = seatButton.dataset.seat;
+        document.getElementById("selected-price").textContent = seatButton.dataset.price;
+    });
+});
