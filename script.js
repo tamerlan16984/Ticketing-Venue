@@ -49,6 +49,26 @@ sections.forEach(function(section) {
 
 let selectedSeat = null;
 
+const cart = [];
+const addToCartButton = document.getElementById("add-to-cart");
+const cartMessage = document.getElementById("cart-message");
+
+function isSeatInCart(seatButton) {
+    return cart.some(function(ticket) {
+        return ticket.section === seatButton.dataset.section &&
+            ticket.row === seatButton.dataset.row &&
+            ticket.seat === seatButton.dataset.seat;
+    });
+}
+
+function updateCartButton() {
+    const alreadyInCart = isSeatInCart(selectedSeat);
+
+    addToCartButton.disabled = alreadyInCart;
+    addToCartButton.textContent = alreadyInCart ? "Already in Cart" : "Add to Cart";
+    cartMessage.textContent = alreadyInCart ? "This seat is already in your cart." : "";
+}
+
 document.querySelectorAll(".seat").forEach(function(seatButton) {
     seatButton.setAttribute("aria-pressed", "false");
     seatButton.setAttribute(
@@ -73,5 +93,30 @@ document.querySelectorAll(".seat").forEach(function(seatButton) {
         document.getElementById("selected-row").textContent = seatButton.dataset.row;
         document.getElementById("selected-number").textContent = seatButton.dataset.seat;
         document.getElementById("selected-price").textContent = seatButton.dataset.price;
+        updateCartButton();
     });
+});
+
+addToCartButton.addEventListener("click", function() {
+    if (selectedSeat === null) {
+        return;
+    }
+
+    if (isSeatInCart(selectedSeat)) {
+        updateCartButton();
+        return;
+    }
+
+    const ticket = {
+        section: selectedSeat.dataset.section,
+        row: selectedSeat.dataset.row,
+        seat: selectedSeat.dataset.seat,
+        price: Number(selectedSeat.dataset.price)
+    };
+
+    cart.push(ticket);
+    updateCartButton();
+
+    cartMessage.textContent =
+        `${ticket.section}, row ${ticket.row}, seat ${ticket.seat} added to cart.`;
 });

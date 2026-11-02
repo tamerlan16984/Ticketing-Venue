@@ -181,3 +181,30 @@ footer {
     outline: 3px dashed #17202a;
     outline-offset: 2px;
 }
+
+#add-to-cart {
+    background-color: #c9a227;
+    color: #17202a;
+    border: 2px solid #17202a;
+    border-radius: 6px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#add-to-cart:hover:not(:disabled) {
+    background-color: #f4d03f;
+}
+
+#add-to-cart:disabled {
+    background-color: #dedede;
+    color: #555;
+    border-color: #777;
+    cursor: not-allowed;
+}
+
+#add-to-cart:focus-visible {
+    outline: 3px dashed #17202a;
+    outline-offset: 3px;
+}
