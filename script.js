@@ -97,6 +97,26 @@ document.querySelectorAll(".seat").forEach(function(seatButton) {
     });
 });
 
+function renderCart() {
+    const cartItems = document.getElementById("cart-items");
+    let total = 0;
+
+    cartItems.replaceChildren();
+
+    cart.forEach(function(ticket) {
+        const item = document.createElement("li");
+
+        item.textContent =
+            `${ticket.section} — Row ${ticket.row}, Seat ${ticket.seat} — ${ticket.price} AZN`;
+
+        cartItems.appendChild(item);
+        total += ticket.price;
+    });
+
+    document.getElementById("cart-empty").hidden = cart.length > 0;
+    document.getElementById("cart-total").textContent = total;
+}
+
 addToCartButton.addEventListener("click", function() {
     if (selectedSeat === null) {
         return;
@@ -115,6 +135,7 @@ addToCartButton.addEventListener("click", function() {
     };
 
     cart.push(ticket);
+    renderCart();
     updateCartButton();
 
     cartMessage.textContent =
