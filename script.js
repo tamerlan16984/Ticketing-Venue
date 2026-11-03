@@ -69,6 +69,87 @@ function updateCartButton() {
     cartMessage.textContent = alreadyInCart ? "This seat is already in your cart." : "";
 }
 
+function saveState() {
+    const inspectedSeat = selectedSeat === null ? null : {
+        section: selectedSeat.dataset.section,
+        row: selectedSeat.dataset.row,
+        seat: selectedSeat.dataset.seat
+    };
+
+    try {
+        localStorage.setItem("chess-ticketing-state", JSON.stringify({
+            cart: cart,
+            inspectedSeat: inspectedSeat
+        }));
+
+        document.getElementById("storage-message").textContent = "";
+    } catch {
+        document.getElementById("storage-message").textContent =
+            "Your changes could not be saved. They may be lost after refreshing.";
+    }
+}
+
+function updateSeatStates() {
+    document.querySelectorAll(".seat").forEach(function(seatButton) {
+        const inCart = isSeatInCart(seatButton);
+
+        seatButton.classList.toggle("in-cart", inCart);
+        seatButton.setAttribute(
+            "aria-label",
+            `${seatButton.dataset.section}, row ${seatButton.dataset.row}, seat ${seatButton.dataset.seat}, ${seatButton.dataset.price} AZN${inCart ? ", in cart" : ""}`
+        );
+    });
+}
+
+function findSeat(ticket) {
+    if (!ticket || typeof ticket !== "object") {
+        return null;
+    }
+
+    return Array.from(document.querySelectorAll(".seat")).find(function(seatButton) {
+        return seatButton.dataset.section === ticket.section &&
+            seatButton.dataset.row === ticket.row &&
+            seatButton.dataset.seat === ticket.seat;
+    });
+}
+
+function restoreState() {
+    try {
+        const saved = JSON.parse(
+            localStorage.getItem("chess-ticketing-state")
+        );
+
+        if (!saved || !Array.isArray(saved.cart)) {
+            return;
+        }
+
+        saved.cart.forEach(function(ticket) {
+            const seatButton = findSeat(ticket);
+
+            if (seatButton && !isSeatInCart(seatButton)) {
+                cart.push({
+                    section: seatButton.dataset.section,
+                    row: seatButton.dataset.row,
+                    seat: seatButton.dataset.seat,
+                    price: Number(seatButton.dataset.price)
+                });
+            }
+        });
+
+        renderCart();
+        updateSeatStates();
+
+        const inspectedSeat = findSeat(saved.inspectedSeat);
+
+        if (inspectedSeat) {
+            inspectedSeat.click();
+        }
+    } catch {
+        document.getElementById("storage-message").textContent =
+            "Saved tickets could not be loaded. Your current cart is still usable.";
+    }
+}
+
 document.querySelectorAll(".seat").forEach(function(seatButton) {
     seatButton.setAttribute("aria-pressed", "false");
     seatButton.setAttribute(
@@ -94,6 +175,7 @@ document.querySelectorAll(".seat").forEach(function(seatButton) {
         document.getElementById("selected-number").textContent = seatButton.dataset.seat;
         document.getElementById("selected-price").textContent = seatButton.dataset.price;
         updateCartButton();
+        saveState();
     });
 });
 
@@ -103,12 +185,45 @@ function renderCart() {
 
     cartItems.replaceChildren();
 
-    cart.forEach(function(ticket) {
+    cart.forEach(function(ticket, index) {
         const item = document.createElement("li");
+        const description = document.createElement("span");
+        const removeButton = document.createElement("button");
 
-        item.textContent =
+        description.textContent =
             `${ticket.section} — Row ${ticket.row}, Seat ${ticket.seat} — ${ticket.price} AZN`;
 
+        removeButton.type = "button";
+        removeButton.className = "remove-ticket";
+        removeButton.textContent = "Remove";
+        removeButton.setAttribute(
+            "aria-label",
+            `Remove ${ticket.section}, row ${ticket.row}, seat ${ticket.seat}`
+        );
+
+        removeButton.addEventListener("click", function() {
+            cart.splice(index, 1);
+            renderCart();
+            updateSeatStates();
+
+            if (selectedSeat !== null) {
+                updateCartButton();
+            }
+
+            saveState();
+
+            const remainingButtons = cartItems.querySelectorAll(".remove-ticket");
+            const nextButton = remainingButtons[index] || remainingButtons[index - 1];
+
+            if (nextButton) {
+                nextButton.focus();
+            } else {
+                document.getElementById("cart-heading").focus();
+            }
+        });
+
+        item.appendChild(description);
+        item.appendChild(removeButton);
         cartItems.appendChild(item);
         total += ticket.price;
     });
@@ -137,7 +252,11 @@ addToCartButton.addEventListener("click", function() {
     cart.push(ticket);
     renderCart();
     updateCartButton();
+    updateSeatStates();
+    saveState();
 
     cartMessage.textContent =
         `${ticket.section}, row ${ticket.row}, seat ${ticket.seat} added to cart.`;
 });
+
+restoreState();

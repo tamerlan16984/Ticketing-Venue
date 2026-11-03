@@ -232,3 +232,35 @@ footer {
     border-bottom: 1px solid #ddd;
     line-height: 1.5;
 }
+
+#cart-items li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    text-align: left;
+}
+
+.remove-ticket {
+    background-color: #17202a;
+    color: white;
+    border: 0;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.remove-ticket:hover {
+    background-color: #2c3e50;
+}
+
+.remove-ticket:focus-visible {
+    outline: 3px dashed #17202a;
+    outline-offset: 3px;
+}
+
+.seat.in-cart {
+    box-shadow: inset 0 0 0 3px white;
+}
