@@ -4,21 +4,33 @@ const sections = [
         id: "vip-seats",
         rows: 4,
         seatsPerRow: 10,
-        price: 150
+        price: 150,
+        unavailableSeats: [
+            { row: 1, seat: 3 },
+            { row: 2, seat: 7 }
+        ]
     },
     {
         name: "Premium",
         id: "premium-seats",
         rows: 6,
         seatsPerRow: 12,
-        price: 100
+        price: 100,
+        unavailableSeats: [
+            { row: 2, seat: 5 },
+            { row: 4, seat: 9 }
+        ]
     },
     {
         name: "General",
         id: "general-seats",
         rows: 10,
         seatsPerRow: 14,
-        price: 40
+        price: 40,
+        unavailableSeats: [
+            { row: 3, seat: 6 },
+            { row: 7, seat: 10 }
+        ]
     }
 ];
 sections.forEach(function(section) {
@@ -39,6 +51,15 @@ sections.forEach(function(section) {
             seatButton.dataset.row = row;
             seatButton.dataset.seat = seat;
             seatButton.dataset.price = section.price;
+
+            seatButton.dataset.unavailable = section.unavailableSeats.some(function(ticket) {
+                return ticket.row === row && ticket.seat === seat;
+            });
+
+            seatButton.classList.toggle(
+                "unavailable",
+                seatButton.dataset.unavailable === "true"
+            );
 
             rowElement.appendChild(seatButton);
         }
@@ -62,11 +83,21 @@ function isSeatInCart(seatButton) {
 }
 
 function updateCartButton() {
+    const unavailable = selectedSeat.dataset.unavailable === "true";
     const alreadyInCart = isSeatInCart(selectedSeat);
 
-    addToCartButton.disabled = alreadyInCart;
-    addToCartButton.textContent = alreadyInCart ? "Already in Cart" : "Add to Cart";
-    cartMessage.textContent = alreadyInCart ? "This seat is already in your cart." : "";
+    addToCartButton.disabled = unavailable || alreadyInCart;
+
+    if (unavailable) {
+        addToCartButton.textContent = "Unavailable";
+        cartMessage.textContent = "This seat is unavailable and cannot be added.";
+    } else if (alreadyInCart) {
+        addToCartButton.textContent = "Already in Cart";
+        cartMessage.textContent = "This seat is already in your cart.";
+    } else {
+        addToCartButton.textContent = "Add to Cart";
+        cartMessage.textContent = "";
+    }
 }
 
 function saveState() {
@@ -96,7 +127,7 @@ function updateSeatStates() {
         seatButton.classList.toggle("in-cart", inCart);
         seatButton.setAttribute(
             "aria-label",
-            `${seatButton.dataset.section}, row ${seatButton.dataset.row}, seat ${seatButton.dataset.seat}, ${seatButton.dataset.price} AZN${inCart ? ", in cart" : ""}`
+            `${seatButton.dataset.section}, row ${seatButton.dataset.row}, seat ${seatButton.dataset.seat}, ${seatButton.dataset.price} AZN${seatButton.dataset.unavailable === "true" ? ", unavailable" : isSeatInCart(seatButton) ? ", in cart" : ", available"}`
         );
     });
 }
@@ -126,7 +157,11 @@ function restoreState() {
         saved.cart.forEach(function(ticket) {
             const seatButton = findSeat(ticket);
 
-            if (seatButton && !isSeatInCart(seatButton)) {
+            if (
+                seatButton &&
+                seatButton.dataset.unavailable !== "true" &&
+                !isSeatInCart(seatButton)
+            ) {
                 cart.push({
                     section: seatButton.dataset.section,
                     row: seatButton.dataset.row,
@@ -154,7 +189,7 @@ document.querySelectorAll(".seat").forEach(function(seatButton) {
     seatButton.setAttribute("aria-pressed", "false");
     seatButton.setAttribute(
         "aria-label",
-        `${seatButton.dataset.section}, row ${seatButton.dataset.row}, seat ${seatButton.dataset.seat}, ${seatButton.dataset.price} AZN`
+        `${seatButton.dataset.section}, row ${seatButton.dataset.row}, seat ${seatButton.dataset.seat}, ${seatButton.dataset.price} AZN${seatButton.dataset.unavailable === "true" ? ", unavailable" : isSeatInCart(seatButton) ? ", in cart" : ", available"}`
     );
 
     seatButton.addEventListener("click", function() {
@@ -234,6 +269,11 @@ function renderCart() {
 
 addToCartButton.addEventListener("click", function() {
     if (selectedSeat === null) {
+        return;
+    }
+
+    if (selectedSeat.dataset.unavailable === "true") {
+        updateCartButton();
         return;
     }
 
