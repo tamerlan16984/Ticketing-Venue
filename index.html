@@ -19,32 +19,42 @@
             <h2>Championship Arena</h2>
             <p>Striped seats are unavailable. Click a seat to inspect its details.</p>
 
-            <div id="chess-stage">
-                <h3>Championship Stage</h3>
-                <p>Grandmaster 1 vs Grandmaster 2</p>
-                <p>Chessboard and Players Area</p>
+            <div id="map-zoom-controls" role="group" aria-label="Map zoom">
+                <button id="zoom-out" type="button" aria-controls="venue-map">Zoom Out</button>
+                <span id="zoom-level" role="status">100%</span>
+                <button id="zoom-in" type="button" aria-controls="venue-map">Zoom In</button>
             </div>
 
-            <section id="vip">
-                <h3>VIP Seating</h3>
-                <p>Closest seats to the championship stage.</p>
-                <p>Ticket price: 150 AZN</p>
-                <div id="vip-seats"></div>
-            </section>
+            <div id="map-viewport" tabindex="0" role="region" aria-label="Venue map">
+                <div id="venue-map">
+                    <div id="chess-stage">
+                        <h3>Championship Stage</h3>
+                        <p>Grandmaster 1 vs Grandmaster 2</p>
+                        <p>Chessboard and Players Area</p>
+                    </div>
 
-            <section id="premium">
-                <h3>Premium Seating</h3>
-                <p>Excellent view of the players and chessboard.</p>
-                <p>Ticket price: 100 AZN</p>
-                <div id="premium-seats"></div>
-            </section>
+                    <section id="vip">
+                        <h3>VIP Seating</h3>
+                        <p>Closest seats to the championship stage.</p>
+                        <p>Ticket price: 150 AZN</p>
+                        <div id="vip-seats"></div>
+                    </section>
 
-            <section id="general">
-                <h3>General Admission</h3>
-                <p>Standard spectator seating.</p>
-                <p>Ticket price: 40 AZN</p>
-                <div id="general-seats"></div>
-            </section>
+                    <section id="premium">
+                        <h3>Premium Seating</h3>
+                        <p>Excellent view of the players and chessboard.</p>
+                        <p>Ticket price: 100 AZN</p>
+                        <div id="premium-seats"></div>
+                    </section>
+
+                    <section id="general">
+                        <h3>General Admission</h3>
+                        <p>Standard spectator seating.</p>
+                        <p>Ticket price: 40 AZN</p>
+                        <div id="general-seats"></div>
+                    </section>
+                </div>
+            </div>
             <section id="seat-details" aria-labelledby="seat-details-heading">
                 <h3 id="seat-details-heading">Selected Seat Details</h3>
                 <div aria-live="polite">

@@ -300,3 +300,30 @@ addToCartButton.addEventListener("click", function() {
 });
 
 restoreState();
+
+const venueMap = document.getElementById("venue-map");
+const zoomInButton = document.getElementById("zoom-in");
+const zoomOutButton = document.getElementById("zoom-out");
+const zoomLevel = document.getElementById("zoom-level");
+
+const minMapZoom = 75;
+const maxMapZoom = 175;
+const mapZoomStep = 25;
+let mapZoom = 100;
+
+function changeMapZoom(amount) {
+    mapZoom = Math.max(minMapZoom, Math.min(maxMapZoom, mapZoom + amount));
+
+    venueMap.style.zoom = mapZoom + "%";
+    zoomLevel.textContent = mapZoom + "%";
+    zoomOutButton.disabled = mapZoom === minMapZoom;
+    zoomInButton.disabled = mapZoom === maxMapZoom;
+}
+
+zoomOutButton.addEventListener("click", function() {
+    changeMapZoom(-mapZoomStep);
+});
+
+zoomInButton.addEventListener("click", function() {
+    changeMapZoom(mapZoomStep);
+});

@@ -274,3 +274,27 @@ footer {
         rgba(255, 255, 255, 0.45) 7px
     );
 }
+
+#map-zoom-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 16px 0;
+}
+
+#map-zoom-controls button {
+    padding: 8px 12px;
+    min-height: 44px;
+    font: inherit;
+}
+
+#map-viewport {
+    overflow: auto;
+    max-height: 65vh;
+}
+
+#venue-map {
+    min-width: 580px;
+}
