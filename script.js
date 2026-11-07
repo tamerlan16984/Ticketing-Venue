@@ -327,3 +327,33 @@ zoomOutButton.addEventListener("click", function() {
 zoomInButton.addEventListener("click", function() {
     changeMapZoom(mapZoomStep);
 });
+
+const mapViewport = document.getElementById("map-viewport");
+const mapMoveStep = 120;
+
+function moveMap(horizontal, vertical) {
+    mapViewport.scrollBy(horizontal, vertical);
+}
+
+document.getElementById("move-up").addEventListener("click", function() {
+    moveMap(0, -mapMoveStep);
+});
+
+document.getElementById("move-down").addEventListener("click", function() {
+    moveMap(0, mapMoveStep);
+});
+
+document.getElementById("move-left").addEventListener("click", function() {
+    moveMap(-mapMoveStep, 0);
+});
+
+document.getElementById("move-right").addEventListener("click", function() {
+    moveMap(mapMoveStep, 0);
+});
+
+document.getElementById("reset-map").addEventListener("click", function() {
+    changeMapZoom(100 - mapZoom);
+
+    const centeredLeft = (mapViewport.scrollWidth - mapViewport.clientWidth) / 2;
+    mapViewport.scrollTo(centeredLeft, 0);
+});

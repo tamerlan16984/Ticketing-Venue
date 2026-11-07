@@ -19,10 +19,15 @@
             <h2>Championship Arena</h2>
             <p>Striped seats are unavailable. Click a seat to inspect its details.</p>
 
-            <div id="map-zoom-controls" role="group" aria-label="Map zoom">
+            <div id="map-zoom-controls" role="group" aria-label="Map navigation">
                 <button id="zoom-out" type="button" aria-controls="venue-map">Zoom Out</button>
                 <span id="zoom-level" role="status">100%</span>
                 <button id="zoom-in" type="button" aria-controls="venue-map">Zoom In</button>
+                <button id="move-up" type="button" aria-controls="map-viewport">Move Up</button>
+                <button id="move-down" type="button" aria-controls="map-viewport">Move Down</button>
+                <button id="move-left" type="button" aria-controls="map-viewport">Move Left</button>
+                <button id="move-right" type="button" aria-controls="map-viewport">Move Right</button>
+                <button id="reset-map" type="button" aria-controls="map-viewport">Reset / Center View</button>
             </div>
 
             <div id="map-viewport" tabindex="0" role="region" aria-label="Venue map">
