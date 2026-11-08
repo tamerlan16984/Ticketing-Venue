@@ -357,3 +357,78 @@ document.getElementById("reset-map").addEventListener("click", function() {
     const centeredLeft = (mapViewport.scrollWidth - mapViewport.clientWidth) / 2;
     mapViewport.scrollTo(centeredLeft, 0);
 });
+
+mapViewport.addEventListener("wheel", function(event) {
+    if (event.ctrlKey || event.deltaY === 0) {
+        return;
+    }
+
+    event.preventDefault();
+
+    const previousZoom = mapZoom;
+    const bounds = mapViewport.getBoundingClientRect();
+    const mouseX = event.clientX - bounds.left;
+    const mouseY = event.clientY - bounds.top;
+    const mapX = mapViewport.scrollLeft + mouseX;
+    const mapY = mapViewport.scrollTop + mouseY;
+
+    changeMapZoom(event.deltaY < 0 ? mapZoomStep : -mapZoomStep);
+
+    const zoomRatio = mapZoom / previousZoom;
+    mapViewport.scrollTo(mapX * zoomRatio - mouseX, mapY * zoomRatio - mouseY);
+}, { passive: false });
+
+let mapDrag = null;
+
+mapViewport.addEventListener("pointerdown", function(event) {
+    if (event.pointerType !== "mouse" || event.button !== 0 ||
+        !venueMap.contains(event.target)) {
+        return;
+    }
+
+    mapDrag = {
+        pointerId: event.pointerId,
+        x: event.clientX,
+        y: event.clientY,
+        left: mapViewport.scrollLeft,
+        top: mapViewport.scrollTop,
+        active: false
+    };
+});
+
+mapViewport.addEventListener("pointermove", function(event) {
+    if (mapDrag === null || event.pointerId !== mapDrag.pointerId) {
+        return;
+    }
+
+    const distanceX = event.clientX - mapDrag.x;
+    const distanceY = event.clientY - mapDrag.y;
+
+    if (!mapDrag.active) {
+        if (Math.hypot(distanceX, distanceY) < 5) {
+            return;
+        }
+
+        mapDrag.active = true;
+        mapViewport.setPointerCapture(event.pointerId);
+        mapViewport.classList.add("is-dragging");
+    }
+
+    mapViewport.scrollTo(mapDrag.left - distanceX, mapDrag.top - distanceY);
+});
+
+function endMapDrag(event) {
+    if (mapDrag !== null && event.pointerId === mapDrag.pointerId) {
+        mapDrag = null;
+        mapViewport.classList.remove("is-dragging");
+    }
+}
+
+mapViewport.addEventListener("pointerup", endMapDrag);
+mapViewport.addEventListener("pointercancel", endMapDrag);
+mapViewport.addEventListener("lostpointercapture", endMapDrag);
+mapViewport.addEventListener("pointerleave", function(event) {
+    if (mapDrag !== null && !mapDrag.active) {
+        endMapDrag(event);
+    }
+});

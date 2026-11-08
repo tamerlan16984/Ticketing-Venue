@@ -298,3 +298,13 @@ footer {
 #venue-map {
     min-width: 580px;
 }
+
+#venue-map {
+    cursor: grab;
+    user-select: none;
+}
+
+#map-viewport.is-dragging,
+#map-viewport.is-dragging .seat {
+    cursor: grabbing;
+}
